@@ -1,7 +1,7 @@
 
 ## Drone Networking
 
-For Running
+
 ### Pre-requisite for the running :
 1. Python any version but prefered above 2.8
 2. Install python virtual environment pipenv (Not necessary though)
