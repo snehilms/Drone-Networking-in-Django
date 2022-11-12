@@ -13,7 +13,7 @@ For Running
 ```
 git clone https://github.com/snehilms/Drone_Networking.git
 ```
-2. Move to the droneNetworking folder and run the below command
+2.Run below command if you want to run python virtual environment
 ```
 pipenv shell
 ```
