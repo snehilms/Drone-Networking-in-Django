@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import redirect, render
 import pyrebase
 import requests
@@ -10,7 +11,7 @@ from threading import Thread
 from django.contrib import messages
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-
+from django.http import JsonResponse
 
 cred = credentials.Certificate("D:/droneNetworking/drone-system-iot-firebase-adminsdk-selsr-36021455d8.json")
 firebase_admin.initialize_app(cred,{
@@ -72,9 +73,23 @@ def home_page(request):
         print("Stopping data listening...")
     return render(request,"drone/home.html",{"Latitude":Latitude,"Longitude":Longitude,"timestamp":timestamp})
     
-
+@login_required
 def check_drone_status(request): 
-    return render(request,'drone/check_drone_status.html')
+    try:
+        data = ref.order_by_child('timestamp').limit_to_last(1).get()
+        data_fields = data[list(data.keys())[0]]
+        Latitude = data_fields['Latitude']
+        Longitude = data_fields['Longitude']
+        timestamp = data_fields['timestamp']
+        print("Latitude:", Latitude)
+        print("Longitude:", Longitude)
+        print('Timestamp:',timestamp)
+        # return final_data
+        # ref.listen(on_data_added)
+        data= {'Latitude':Latitude,'Longitude':Longitude}
+        return JsonResponse(data)
+    except KeyboardInterrupt:
+        print("Stopping data listening...")
 
 
 

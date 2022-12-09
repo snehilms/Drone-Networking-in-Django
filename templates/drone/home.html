@@ -16,17 +16,17 @@
 <script>      
   async function fetchData() {
     $.ajax({
-      url: "http://127.0.0.1:8000/home",
+      url: "http://127.0.0.1:8000/check-drone-status",
       method: "GET",
       success: function(response) {
-        console.log(response.Latitude)
+        console.log(response)
         $("#Latitude").html(response.Latitude);
         $("#Longitude").html(response.Longitude);
       }
     });
   }
 
-setInterval(fetchData, 2000);
+setInterval(fetchData, 1000);
 </script>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" >
