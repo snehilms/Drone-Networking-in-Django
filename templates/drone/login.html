@@ -21,7 +21,8 @@
                     <div class="card-body text-dark">
                         
                             <h5 class="card-title" ><span >Login</span></h5>
-                        <form action="/login" method="POST" class="validated-form" novalidate>
+                        <form action="/login" method="POST" >
+                            {% csrf_token %}
                             <div class="mb-3">
                                 <label class="form-label" for="username">Username</label>
                                 <input class="form-control" type="text" id="username" name="username" autofocus required>

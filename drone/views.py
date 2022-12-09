@@ -1,13 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 import pyrebase
 import requests
-
 import sys, errno  
 # from  firebase import firebase
-
+from django.contrib.auth.models import User
 import firebase_admin
 from firebase_admin import credentials,db
 from threading import Thread
+from django.contrib import messages
+from django.contrib.auth import authenticate,login,logout
+from django.contrib.auth.decorators import login_required
+
 
 cred = credentials.Certificate("D:/droneNetworking/drone-system-iot-firebase-adminsdk-selsr-36021455d8.json")
 firebase_admin.initialize_app(cred,{
@@ -51,21 +54,23 @@ ref = db.reference('gps')
 #     listen_thread = Thread(target=listen_for_data)
 #     listen_thread.start()
 #     return render(request,"drone/index.html")
+@login_required
 def index(request):
+
     try:
         data = ref.order_by_child('timestamp').limit_to_last(1).get()
         data_fields = data[list(data.keys())[0]]
-        latitude = data_fields['Latitude']
-        longitude = data_fields['Longitude']
+        Latitude = data_fields['Latitude']
+        Longitude = data_fields['Longitude']
         timestamp = data_fields['timestamp']
-        print("Latitude:", latitude)
-        print("Longitude:", longitude)
+        print("Latitude:", Latitude)
+        print("Longitude:", Longitude)
         print('Timestamp:',timestamp)
         # return final_data
         # ref.listen(on_data_added)
     except KeyboardInterrupt:
         print("Stopping data listening...")
-    return render(request,"drone/index.html",{"Latitude":latitude,"Longitude":longitude,"timestamp":timestamp})
+    return render(request,"drone/index.html",{"Latitude":Latitude,"Longitude":Longitude,"timestamp":timestamp})
     
 
 def check_drone_status(request): 
@@ -76,9 +81,40 @@ def check_drone_status(request):
 def home_page(request):
     return render(request,'drone/home.html')
 
-def login_page(request):
-    return render(request,'drone/login.html')
 
 def signup_page(request):
+    print("Entered signup page")
+    if request.method == "POST":
+        username = request.POST['username']
+        password = request.POST['password']
+        email = request.POST['email']
+        myUser = User.objects.create_user(username,email,password)
+        myUser.save()
+        print(myUser," user saved")
+        messages.success(request,"Your account has been successfully created.")
+        return redirect('login')
+
     return render(request,'drone/signup.html')
+
+def login_page(request):
+    print("Entered login page")
+    if request.method == "POST":
+        user = request.POST['username']
+        passw = request.POST['password']
+
+        user = authenticate(username=user, password=passw)
+        print(user)
+        if user is not None:
+            login(request,user)
+            return render(request,'drone/index.html')
+        else:
+            messages.error(request, "Bad Credentials!")
+
+    return render(request,'drone/login.html')
+
+
+def sign_out(request):
+    logout(request)
+    messages.success(request, "Logged Out successfully")
+    return redirect('home')
 

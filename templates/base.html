@@ -1,8 +1,9 @@
-<!doctype html>
+{% comment %} <!doctype html>
 <html lang="en">
 
 <head>
   <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,11 +15,17 @@
 
 <script>      
   async function fetchData() {
-    const response = await fetch("http://127.0.0.1:8000/");
-    const data = await response;
-    console.log("Data from the backend:",data);
+    $.ajax({
+      url: "http://127.0.0.1:8000/",
+      method: "GET",
+      success: function(data) {
+
+        $("#Latitude").html(data.Latitude);
+        $("#Longitude").html(data.Longitude);
+      }
+    });
   }
-// Use the setInterval function to call the fetchData function every 2 seconds
+
 setInterval(fetchData, 2000);
 </script>
 <body>
@@ -155,7 +162,7 @@ setInterval(fetchData, 2000);
             <div class="card-body">
               
               <h2 class="card-title text-center">Latitude</h2>
-              <p class="card-text" id="latitude">
+              <p class="card-text" id="Latitude">
                 {{Latitude}}</p>
              
             </div>
@@ -167,7 +174,7 @@ setInterval(fetchData, 2000);
             <div class="card-body">
               <i></i>
               <h2 class="card-title text-center">Longitude</h2>
-              <p class="card-text" id="longitude">
+              <p class="card-text" id="Longitude">
                 {{Longitude}}</p>
              
             </div>
@@ -274,4 +281,4 @@ const marker = new mapboxgl.Marker()
     </script>
 </body>
 
-</html>
+</html> {% endcomment %}

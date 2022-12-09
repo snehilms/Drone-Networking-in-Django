@@ -19,17 +19,25 @@
                         alt="" class="card-img-top" />
                     <div class="card-body text-dark">
                         <h5 class="card-title">Register</h5>
-                        <form action="/register" method="POST" class="validated-form" novalidate>
+                        <form action="/signup" method="POST" >
+                            {% csrf_token %}
                             <div class="mb-3">
-                                <label class="form-label" for="username">Username</label>
+                                <label class="form-label" for="">Username</label>
                                 <input class="form-control" type="text" id="username" name="username" required autofocus>
+                                <div class="invalid-feedback">
+                                    This is required field!
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label" for="">Email ID</label>
+                                <input class="form-control" type="text" id="email" name="email" required autofocus>
                                 <div class="invalid-feedback">
                                     This is required field!
                                 </div>
                             </div>
                            
                             <div class="mb-3">
-                                <label class="form-label" for="password">Password</label>
+                                <label class="form-label" for="">Password</label>
                                 <input class="form-control" type="password" id="password" name="password" required>
                                 <div class="invalid-feedback">
                                     This is required field!
