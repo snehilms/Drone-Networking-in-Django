@@ -55,7 +55,7 @@ ref = db.reference('gps')
 #     listen_thread.start()
 #     return render(request,"drone/index.html")
 @login_required
-def index(request):
+def home_page(request):
 
     try:
         data = ref.order_by_child('timestamp').limit_to_last(1).get()
@@ -70,7 +70,7 @@ def index(request):
         # ref.listen(on_data_added)
     except KeyboardInterrupt:
         print("Stopping data listening...")
-    return render(request,"drone/index.html",{"Latitude":Latitude,"Longitude":Longitude,"timestamp":timestamp})
+    return render(request,"drone/home.html",{"Latitude":Latitude,"Longitude":Longitude,"timestamp":timestamp})
     
 
 def check_drone_status(request): 
@@ -78,8 +78,8 @@ def check_drone_status(request):
 
 
 
-def home_page(request):
-    return render(request,'drone/home.html')
+def index(request):
+    return render(request,'drone/index.html')
 
 
 def signup_page(request):
@@ -106,7 +106,8 @@ def login_page(request):
         print(user)
         if user is not None:
             login(request,user)
-            return render(request,'drone/index.html')
+            # return render(request,'drone/home.html')
+            return redirect('home')
         else:
             messages.error(request, "Bad Credentials!")
 
@@ -116,5 +117,5 @@ def login_page(request):
 def sign_out(request):
     logout(request)
     messages.success(request, "Logged Out successfully")
-    return redirect('home')
+    return redirect('/')
 
