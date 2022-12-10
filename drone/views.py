@@ -35,6 +35,7 @@ firebase_admin.initialize_app(cred,{
 # database=firebase.database()
 
 ref = db.reference('gps')
+ref2 = db.reference('ultrasonic')
 # data=dict()
 # def on_data_added(event):
 #     print(event.data)
@@ -60,33 +61,42 @@ def home_page(request):
 
     try:
         data = ref.order_by_child('timestamp').limit_to_last(1).get()
+        ultrasonic_data=ref2.order_by_child('timestamp').limit_to_last(1).get()
         data_fields = data[list(data.keys())[0]]
+        ultrasonic_fields=ultrasonic_data[list(ultrasonic_data.keys())[0]]
         Latitude = data_fields['Latitude']
         Longitude = data_fields['Longitude']
+        Distance= ultrasonic_fields['Obst_dist']
         timestamp = data_fields['timestamp']
         print("Latitude:", Latitude)
         print("Longitude:", Longitude)
         print('Timestamp:',timestamp)
+        print("Distance",Distance)
         # return final_data
         # ref.listen(on_data_added)
     except KeyboardInterrupt:
         print("Stopping data listening...")
-    return render(request,"drone/home.html",{"Latitude":Latitude,"Longitude":Longitude,"timestamp":timestamp})
+    return render(request,"drone/home.html",{"Latitude":Latitude,"Longitude":Longitude,"Distance":Distance,"timestamp":timestamp})
     
 @login_required
 def check_drone_status(request): 
     try:
         data = ref.order_by_child('timestamp').limit_to_last(1).get()
+        ultrasonic_data=ref2.order_by_child('timestamp').limit_to_last(1).get()
+        ultrasonic_fields=ultrasonic_data[list(ultrasonic_data.keys())[0]]
         data_fields = data[list(data.keys())[0]]
         Latitude = data_fields['Latitude']
         Longitude = data_fields['Longitude']
         timestamp = data_fields['timestamp']
+        Distance= ultrasonic_fields['Obst_dist']
+        
         print("Latitude:", Latitude)
         print("Longitude:", Longitude)
         print('Timestamp:',timestamp)
+        print("Distance",Distance)
         # return final_data
         # ref.listen(on_data_added)
-        data= {'Latitude':Latitude,'Longitude':Longitude}
+        data= {'Latitude':Latitude,'Longitude':Longitude,"Distance":Distance}
         return JsonResponse(data)
     except KeyboardInterrupt:
         print("Stopping data listening...")

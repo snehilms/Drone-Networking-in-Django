@@ -19,14 +19,17 @@
       url: "http://127.0.0.1:8000/check-drone-status",
       method: "GET",
       success: function(response) {
+        var globalLat= response.Latitude;
+        var globalLong= response.Longitude;
         console.log(response)
         $("#Latitude").html(response.Latitude);
         $("#Longitude").html(response.Longitude);
+        $("#Distance").html(response.Distance);
       }
     });
   }
 
-setInterval(fetchData, 1000);
+setInterval(fetchData, 500);
 </script>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" >
@@ -188,6 +191,8 @@ setInterval(fetchData, 1000);
   <div id='map' style='width:100%; height: 600px;' data-aos="zoom-in" data-aos-offst="200"></div>
 <script>
 mapboxgl.accessToken = 'pk.eyJ1IjoiaGFyc2hpdHNpbmdoYXNwYWwiLCJhIjoiY2w2bjg5MjViMGF2dTNjb2Z0Mjhnbjl3cyJ9.JXusY7N-DCr-eB19tMU1uQ';
+console.log("map latitude",window.globalLat);
+console.log("map longitude",window.globalLong)
 const map = new mapboxgl.Map({
     container: 'map', // container ID
     style: 'mapbox://styles/mapbox/streets-v12', // style URL
@@ -203,7 +208,7 @@ const marker = new mapboxgl.Marker()
 </script>
 
 
-  <section class="services py-5 bg-light" id="weather">
+  {% comment %} <section class="services py-5 bg-light" id="weather">
     <div class="container">
       <div class="text-center my-5">
         <h1 data-aos="fade-up" data-aos-offst="200">Weather<span class="text-primary"> Forecasting</span></h1>
@@ -236,7 +241,7 @@ const marker = new mapboxgl.Marker()
 
       </div>
     </div>
-  </section>
+  </section> {% endcomment %}
 
   <section class="services py-5 bg-light" id="others">
     <div class="container">
@@ -250,8 +255,8 @@ const marker = new mapboxgl.Marker()
             <div class="card-body bg-primary">
               
               <h2 class="text-center card-title text-light">Proximity</h2>
-              <p class="card-text text-light">
-                content.</p>
+              <p class="card-text text-light" id="Distance">
+                {{ Distance }}</p>
              
             </div>
           </div>
