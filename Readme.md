@@ -1,3 +1,4 @@
+### An IOT Drone Networking application for tracking drone characteristic parameters like geo-location, velocity, temperature send from the the sensors on the drone.
 
 ## Drone Networking
 
